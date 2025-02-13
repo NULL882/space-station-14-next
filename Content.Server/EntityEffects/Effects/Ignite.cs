@@ -26,11 +26,12 @@ public sealed partial class Ignite : EntityEffect
         var flamSys = args.EntityManager.System<FlammableSystem>();
         if (args is EntityEffectReagentArgs reagentArgs)
         {
-            flamSys.Ignite(reagentArgs.TargetEntity, reagentArgs.OrganEntity ?? reagentArgs.TargetEntity, flammable: flammable);
-        }
-        else
+            if (args.EntityManager.TryGetComponent(reagentArgs.TargetEntity, out FlammableComponent? flammable)) // Goobstation
+                flamSys.Ignite(reagentArgs.TargetEntity, reagentArgs.OrganEntity ?? reagentArgs.TargetEntity, flammable); // Goob edit
+        } else
         {
-            flamSys.Ignite(args.TargetEntity, args.TargetEntity, flammable: flammable);
+            if (args.EntityManager.TryGetComponent(args.TargetEntity, out FlammableComponent? flammable)) // Goobstation
+                flamSys.Ignite(args.TargetEntity, args.TargetEntity, flammable); // Goob edit
         }
     }
 }

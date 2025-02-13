@@ -275,6 +275,13 @@ public sealed partial class GunComponent : Component
     [DataField]
     public bool RequiresSkill;
     // Corvax-Next-Skills-End
+
+    /// </summary>
+    /// Goobstation
+    /// Muzzle flash will be rotated by this angle if the weapon is dropped
+    /// </summary>
+    [DataField]
+    public Angle MuzzleFlashRotationOffset;
 }
 
 [Flags]

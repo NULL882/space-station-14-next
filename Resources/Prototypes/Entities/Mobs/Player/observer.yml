@@ -101,6 +101,7 @@
     icon: Interface/VerbIcons/light.svg.192dpi.png
     clientExclusive: true
     checkCanInteract: false
+    raiseOnUser: true # Goobstation
     event: !type:ToggleLightingActionEvent
 
 - type: entity
@@ -112,6 +113,7 @@
     icon: Interface/VerbIcons/vv.svg.192dpi.png
     clientExclusive: true
     checkCanInteract: false
+    raiseOnUser: true # Goobstation
     event: !type:ToggleFoVActionEvent
 
 - type: entity
@@ -123,6 +125,7 @@
     icon: { sprite: Mobs/Ghosts/ghost_human.rsi, state: icon }
     clientExclusive: true
     checkCanInteract: false
+    raiseOnUser: true # Goobstation
     event: !type:ToggleGhostsActionEvent
 
 - type: entity

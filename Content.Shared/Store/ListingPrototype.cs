@@ -210,9 +210,17 @@ public partial class ListingData : IEquatable<ListingData>
 
     /// <summary>
     /// Whether or not to disable refunding for the store when the listing is purchased from it.
+    /// Goob edit: This won't disable refund, but instead you won't be able to refund this listing.
     /// </summary>
     [DataField]
     public bool DisableRefund = false;
+
+    /// <summary>
+    /// Goobstation.
+    /// When purchased, it will block refunds of these listings.
+    /// </summary>
+    [DataField]
+    public HashSet<ProtoId<ListingPrototype>> BlockRefundListings = new();
 
     public bool Equals(ListingData? listing)
     {
@@ -225,11 +233,16 @@ public partial class ListingData : IEquatable<ListingData>
             Description != listing.Description ||
             ProductEntity != listing.ProductEntity ||
             ProductAction != listing.ProductAction ||
-            ProductEvent?.GetType() != listing.ProductEvent?.GetType() ||
+            RaiseProductEventOnUser != listing.RaiseProductEventOnUser || // Goobstation
+            DisableRefund != listing.DisableRefund || // Goobstation
             RestockTime != listing.RestockTime)
             return false;
 
         if (Icon != null && !Icon.Equals(listing.Icon))
+            return false;
+
+        // Goobstation
+        if (!BlockRefundListings.OrderBy(x => x).SequenceEqual(listing.BlockRefundListings.OrderBy(x => x)))
             return false;
 
         // more complicated conditions that eat perf. these don't really matter
@@ -247,6 +260,43 @@ public partial class ListingData : IEquatable<ListingData>
         return true;
     }
 
+    /// <summary>
+    /// Creates a unique instance of a listing. ALWAWYS USE THIS WHEN ENUMERATING LISTING PROTOTYPES
+    /// DON'T BE DUMB AND MODIFY THE PROTOTYPES
+    /// </summary>
+    /// <returns>A unique copy of the listing data.</returns>
+    public object Clone()
+    {
+        return new ListingData
+        {
+            ID = ID,
+            Name = Name,
+            Description = Description,
+            Categories = Categories,
+            Cost = Cost,
+            Conditions = Conditions,
+            Icon = Icon,
+            Priority = Priority,
+            ProductEntity = ProductEntity,
+            ProductAction = ProductAction,
+            ProductUpgradeId = ProductUpgradeId,
+            ProductActionEntity = ProductActionEntity,
+            ProductEvent = ProductEvent,
+            RaiseProductEventOnUser = RaiseProductEventOnUser, // goob edit
+            ProductHereticKnowledge = ProductHereticKnowledge, // goob edit
+            DisableRefund = DisableRefund, // goob edit
+            BlockRefundListings = BlockRefundListings, // goob edit
+            PurchaseAmount = PurchaseAmount,
+            RestockTime = RestockTime,
+            // WD START
+            SaleLimit = SaleLimit,
+            SaleBlacklist = SaleBlacklist,
+            DiscountValue = DiscountValue,
+            OldCost = OldCost,
+            Components = Components,
+            // WD END
+        };
+    }
 }
 
 /// <summary>

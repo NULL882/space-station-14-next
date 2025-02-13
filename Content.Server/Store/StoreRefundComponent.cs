@@ -1,4 +1,7 @@
 ﻿using Content.Server.Store.Systems;
+using Content.Shared.FixedPoint;
+using Content.Shared.Store;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Store.Components;
 
@@ -18,15 +21,11 @@ public sealed partial class StoreRefundComponent : Component
     [DataField]
     public EntityUid? StoreEntity;
 
-    /// <summary>
-    ///     The time this entity was bought
-    /// </summary>
-    [DataField]
-    public TimeSpan? BoughtTime;
+    // Goobstation start
+    [ViewVariables, DataField]
+    public ListingData? Data;
 
-    /// <summary>
-    ///     How long until this entity disables refund purchase?
-    /// </summary>
-    [DataField]
-    public TimeSpan DisableTime = TimeSpan.FromSeconds(300);
+    [ViewVariables, DataField]
+    public Dictionary<ProtoId<CurrencyPrototype>, FixedPoint2> BalanceSpent = new();
+    // Goobstation end
 }

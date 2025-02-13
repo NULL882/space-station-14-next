@@ -28,6 +28,7 @@
     - BaseStationNanotrasen
     - BaseStationStockMarket # Corvax-Next-StockTrading
     - BaseStationDeliveries
+    - BaseStationWizardTarget # Goobstation
   categories: [ HideSpawnMenu ]
   components:
     - type: Transform

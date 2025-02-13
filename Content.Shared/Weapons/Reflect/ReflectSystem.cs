@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using Content.Shared._Goobstation.Wizard.Projectiles;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Alert;
 using Content.Shared.Audio;
@@ -97,8 +98,13 @@ public sealed class ReflectSystem : EntitySystem
         if (!Resolve(reflector, ref reflect, false) ||
             !_toggle.IsActivated(reflector) ||
             !TryComp<ReflectiveComponent>(projectile, out var reflective) ||
-            (reflect.Reflects & reflective.Reflective) == 0x0 ||
-            !_random.Prob(reflect.ReflectProb) ||
+            // Goob edit start
+            !((reflect.Reflects & reflective.Reflective) != 0x0 &&
+                _random.Prob(reflect.ReflectProb) ||
+                reflective.Reflective != ReflectType.None &&
+                (reflect.Reflects & reflective.Reflective) == 0x0 &&
+                _random.Prob(reflect.OtherTypeReflectProb)) ||
+            // Goob edit end
             !TryComp<PhysicsComponent>(projectile, out var physics))
         {
             return false;
@@ -120,6 +126,8 @@ public sealed class ReflectSystem : EntitySystem
 
         if (_netManager.IsServer)
         {
+            if (TryComp(projectile, out HomingProjectileComponent? homing)) // Goobstation
+                RemCompDeferred(projectile, homing);
             _popup.PopupEntity(Loc.GetString("reflect-shot"), user);
             _audio.PlayPvs(reflect.SoundOnReflect, user, AudioHelpers.WithVariation(0.05f, _random));
         }
@@ -165,7 +173,14 @@ public sealed class ReflectSystem : EntitySystem
     {
         if (!TryComp<ReflectComponent>(reflector, out var reflect) ||
             !_toggle.IsActivated(reflector) ||
-            !_random.Prob(reflect.ReflectProb))
+            !reflect.InRightPlace ||
+            // Goob edit start
+            !((reflect.Reflects & reflective) != 0x0 &&
+                _random.Prob(reflect.ReflectProb) ||
+                reflective != ReflectType.None &&
+                (reflect.Reflects & reflective) == 0x0 &&
+                _random.Prob(reflect.OtherTypeReflectProb)))
+            // Goob edit end
         {
             newDirection = null;
             return false;

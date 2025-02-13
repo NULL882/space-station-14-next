@@ -459,15 +459,17 @@
     sprite: Clothing/Mask/rat.rsi
   - type: Clothing
     sprite: Clothing/Mask/rat.rsi
-  - type: BreathMask
   - type: Tag
     tags:
     - HamsterWearable
+    - CursedAnimalMask # Goobstation
     - WhitelistChameleon
   - type: HideLayerClothing
     slots:
     - Snout
   - type: IdentityBlocker
+  - type: AddAccentClothing # Goobstation
+    accent: RatAccent
 
 - type: entity
   parent: ClothingMaskBase
@@ -479,11 +481,16 @@
     sprite: Clothing/Mask/fox.rsi
   - type: Clothing
     sprite: Clothing/Mask/fox.rsi
-  - type: BreathMask
   - type: IdentityBlocker
   - type: HideLayerClothing
     slots:
     - Snout
+  - type: Tag
+    tags:
+    - CursedAnimalMask # Goobstation
+    - WhitelistChameleon # Goobstation
+  - type: AddAccentClothing # Goobstation
+    accent: FoxAccent
 
 - type: entity
   parent: ClothingMaskBase
@@ -495,11 +502,16 @@
     sprite: Clothing/Mask/bee.rsi
   - type: Clothing
     sprite: Clothing/Mask/bee.rsi
-  - type: BreathMask
   - type: IdentityBlocker
   - type: HideLayerClothing
     slots:
     - Snout
+  - type: Tag
+    tags:
+    - CursedAnimalMask # Goobstation
+    - WhitelistChameleon # Goobstation
+  - type: AddAccentClothing # Goobstation
+    accent: BeeAccent
 
 - type: entity
   parent: ClothingMaskBase
@@ -511,11 +523,16 @@
     sprite: Clothing/Mask/bear.rsi
   - type: Clothing
     sprite: Clothing/Mask/bear.rsi
-  - type: BreathMask
   - type: IdentityBlocker
   - type: HideLayerClothing
     slots:
     - Snout
+  - type: Tag
+    tags:
+    - CursedAnimalMask # Goobstation
+    - WhitelistChameleon # Goobstation
+  - type: AddAccentClothing # Goobstation
+    accent: BearAccent
 
 - type: entity
   parent: ClothingMaskBase
@@ -527,11 +544,16 @@
     sprite: Clothing/Mask/raven.rsi
   - type: Clothing
     sprite: Clothing/Mask/raven.rsi
-  - type: BreathMask
   - type: IdentityBlocker
   - type: HideLayerClothing
     slots:
     - Snout
+  - type: Tag
+    tags:
+    - CursedAnimalMask # Goobstation
+    - WhitelistChameleon # Goobstation
+  - type: AddAccentClothing # Goobstation
+    accent: RavenAccent
 
 - type: entity
   parent: ClothingMaskBase
@@ -543,11 +565,16 @@
     sprite: Clothing/Mask/jackal.rsi
   - type: Clothing
     sprite: Clothing/Mask/jackal.rsi
-  - type: BreathMask
   - type: IdentityBlocker
   - type: HideLayerClothing
     slots:
     - Snout
+  - type: Tag
+    tags:
+    - CursedAnimalMask # Goobstation
+    - WhitelistChameleon # Goobstation
+  - type: AddAccentClothing # Goobstation
+    accent: JackalAccent
 
 - type: entity
   parent: ClothingMaskBase
@@ -559,11 +586,16 @@
     sprite: Clothing/Mask/bat.rsi
   - type: Clothing
     sprite: Clothing/Mask/bat.rsi
-  - type: BreathMask
   - type: IdentityBlocker
   - type: HideLayerClothing
     slots:
     - Snout
+  - type: Tag
+    tags:
+    - CursedAnimalMask # Goobstation
+    - WhitelistChameleon # Goobstation
+  - type: AddAccentClothing # Goobstation
+    accent: BatAccent
 
 - type: entity
   parent: ClothingMaskBase

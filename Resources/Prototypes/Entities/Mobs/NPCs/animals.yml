@@ -1183,7 +1183,7 @@
       collection: Punch
     damage:
       types:
-        Blunt: 20
+        Blunt: 30 # Goob edit
     animation: WeaponArcFist
   - type: NPCRetaliation
   - type: FactionException
@@ -1445,6 +1445,7 @@
       methods: [ Touch ]
       effects:
       - !type:WashCreamPieReaction
+  - type: LayingDown # Goobstation
 
 
 
@@ -1571,8 +1572,8 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      60: Critical
-      125: Dead
+      100: Critical # Goob edit
+      200: Dead # Goob edit
   - type: MovementSpeedModifier
     baseWalkSpeed: 3.5
     baseSprintSpeed: 5

@@ -75,7 +75,7 @@ public sealed partial class HereticAbilitySystem : EntitySystem
         _aud.PlayPvs(new SoundPathSpecifier("/Audio/Effects/tesla_consume.ogg"), ent);
 
         foreach (var pookie in GetNearbyPeople(ent, power))
-            _stun.TryKnockdown(pookie, TimeSpan.FromSeconds(power), true);
+            _stun.KnockdownOrStun(pookie, TimeSpan.FromSeconds(power), true);
 
         _transform.SetCoordinates(ent, args.Target);
 
@@ -83,7 +83,7 @@ public sealed partial class HereticAbilitySystem : EntitySystem
         _aud.PlayPvs(new SoundPathSpecifier("/Audio/Effects/tesla_consume.ogg"), ent);
 
         foreach (var pookie in GetNearbyPeople(ent, power))
-            _stun.TryKnockdown(pookie, TimeSpan.FromSeconds(power), true);
+            _stun.KnockdownOrStun(pookie, TimeSpan.FromSeconds(power), true);
 
         args.Handled = true;
     }
@@ -114,7 +114,7 @@ public sealed partial class HereticAbilitySystem : EntitySystem
 
         // stun close-mid range
         foreach (var pookie in midPriority)
-            _stun.TryKnockdown(pookie, TimeSpan.FromSeconds(2.5f), true);
+            _stun.KnockdownOrStun(pookie, TimeSpan.FromSeconds(2.5f), true);
 
         // pull in farthest ones
         foreach (var pookie in farPriority)

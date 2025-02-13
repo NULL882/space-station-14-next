@@ -20,6 +20,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Ghost;
 using Content.Shared.Humanoid;
+using Content.Shared.Inventory;
 using Content.Shared.Mind;
 using Content.Shared.Players;
 using Content.Shared.Roles;
@@ -50,6 +51,8 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private readonly PendingAntagSystem _pendingAntag = default!; // Goobstation
+    [Dependency] private readonly InventorySystem _inventory = default!; // Goobstation
 
     // arbitrary random number to give late joining some mild interest.
     public const float LateJoinRandomChance = 0.5f;
@@ -393,10 +396,14 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
             return;
         }
 
-        // TODO: This is really messy because this part runs twice for midround events.
-        // Once when the ghostrole spawner is created and once when a player takes it.
-        // Therefore any component subscribing to this has to make sure both subscriptions return the same value
-        // or the ghost role raffle location preview will be wrong.
+        if (def.UnequipOldGear && TryComp(player, out InventoryComponent? inventory) &&
+            _inventory.TryGetSlots(player, out var slots))
+        {
+            foreach (var slot in slots)
+            {
+                _inventory.TryUnequip(player, slot.Name, true, true, inventory: inventory);
+            }
+        }
 
         var getPosEv = new AntagSelectLocationEvent(session, ent);
         RaiseLocalEvent(ent, ref getPosEv, true);
@@ -571,7 +578,20 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
         if (ent.Comp.AgentName is not { } name)
             return;
 
-        args.Minds = ent.Comp.AssignedMinds;
+        args.Minds = ent.Comp.SelectedMinds;
+
+        if (ent.Comp.UseCharacterNames) // Goobstation
+        {
+            args.Minds = args.Minds.Select(x =>
+            {
+                if (!TryComp(x.Item1, out MindComponent? mind) || mind.CharacterName == null)
+                    return x;
+
+                return (x.Item1, mind.CharacterName);
+            })
+            .ToList();
+        }
+
         args.AgentName = Loc.GetString(name);
     }
 }

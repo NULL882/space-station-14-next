@@ -1110,6 +1110,8 @@
   - type: Tag
     tags:
       - HideContextMenu
+  - type: Ammo # Goobstation
+    muzzleFlash: null
 
 - type: entity
   name: laser bolt

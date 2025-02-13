@@ -24,6 +24,18 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Utility;
+
+// Shitmed Change
+using Content.Shared._CorvaxNext.Body.Events;
+using Content.Shared._CorvaxNext.Body.Part;
+using Content.Shared._CorvaxNext.Humanoid.Events;
+using Content.Shared.Silicons.Borgs.Components;
+using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Humanoid;
+using Content.Shared.Inventory.Events;
+using Content.Shared.Pulling.Events;
+using Content.Shared.Standing;
+using Robust.Shared.Network;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.Body.Systems;
@@ -440,7 +452,19 @@ public partial class SharedBodySystem
 
             DropSlotContents((partId, part));
             RemovePartChildren((partId, part), bodyEnt);
-            QueueDel(partId);
+            foreach (var organ in GetPartOrgans(partId, part))
+                _gibbingSystem.TryGibEntityWithRef(bodyEnt, organ.Id, GibType.Drop, GibContentsOption.Skip,
+                    ref gibs, playAudio: false, launchImpulse: GibletLaunchImpulse, launchImpulseVariance: GibletLaunchImpulseVariance);
+
+            _gibbingSystem.TryGibEntityWithRef(partId, partId, GibType.Gib, GibContentsOption.Gib, ref gibs,
+                playAudio: false, launchGibs: true, launchImpulse: GibletLaunchImpulse, launchImpulseVariance: GibletLaunchImpulseVariance);
+
+            if (HasComp<InventoryComponent>(partId))
+                foreach (var item in _inventory.GetHandOrInventoryEntities(partId))
+                    SharedTransform.AttachToGridOrMap(item);
+
+            if (_net.IsServer) // Goob edit
+                QueueDel(partId);
             return true;
         }
 

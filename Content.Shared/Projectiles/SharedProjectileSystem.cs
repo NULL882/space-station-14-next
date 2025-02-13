@@ -5,7 +5,9 @@ using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Tag;
 using Content.Shared.Throwing;
+using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
@@ -14,6 +16,7 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Dynamics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 
@@ -29,6 +32,9 @@ public abstract partial class SharedProjectileSystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private readonly TagSystem _tag = default!;
+
+    private static readonly ProtoId<TagPrototype> GunCanAimShooterTag = "GunCanAimShooter";
 
     public override void Initialize()
     {
@@ -187,6 +193,21 @@ public abstract partial class SharedProjectileSystem : EntitySystem
 
     private void PreventCollision(EntityUid uid, ProjectileComponent component, ref PreventCollideEvent args)
     {
+        // Goobstation - Crawling fix
+        if (TryComp<RequireProjectileTargetComponent>(args.OtherEntity, out var requireTarget) && requireTarget.IgnoreThrow && requireTarget.Active)
+            return;
+
+        if (component.IgnoredEntities.Contains(args.OtherEntity)) // Goobstation
+        {
+            args.Cancelled = true;
+            return;
+        }
+
+        if ((component.Shooter == args.OtherEntity || component.Weapon == args.OtherEntity) &&
+            component.Weapon != null && _tag.HasTag(component.Weapon.Value, GunCanAimShooterTag) &&
+            TryComp(uid, out TargetedProjectileComponent? targeted) && targeted.Target == args.OtherEntity)
+            return;
+
         if (component.IgnoreShooter && (args.OtherEntity == component.Shooter || args.OtherEntity == component.Weapon))
         {
             args.Cancelled = true;

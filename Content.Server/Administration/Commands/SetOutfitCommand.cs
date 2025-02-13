@@ -164,6 +164,12 @@ namespace Content.Server.Administration.Commands
                 stationSpawning.EquipRoleLoadout(target, roleLoadout, jobProto);
             }
 
+            if (entityManager.HasComponent<EncryptionKeyHolderComponent>(target))
+            {
+                var encryption = entityManager.System<InternalEncryptionKeySpawner>();
+                encryption.TryInsertEncryptionKey(target, startingGear, entityManager);
+            }
+            
             return true;
         }
     }

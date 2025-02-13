@@ -635,9 +635,8 @@ public sealed partial class ShuttleSystem
 
                 // Corvax-Next-FTLImmune-Start
                 if (!HasComp<FTLKnockdownImmuneComponent>(child))
-                    _stuns.TryParalyze(child, _hyperspaceKnockdownTime, true, status);
+                    _stuns.KnockdownOrStun(child, _hyperspaceKnockdownTime, true, status);
                 // Corvax-Next-FTLImmune-End
-
 
                 // If the guy we knocked down is on a spaced tile, throw them too
                 if (grid != null)

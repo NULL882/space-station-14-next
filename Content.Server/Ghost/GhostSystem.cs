@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Numerics;
+using Content.Server._Goobstation.Wizard.Systems;
 using Content.Server.Administration.Logs;
 using Content.Server.Chat.Managers;
 using Content.Server.GameTicking;
@@ -66,6 +67,7 @@ namespace Content.Server.Ghost
         [Dependency] private readonly SharedPopupSystem _popup = default!;
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly TagSystem _tag = default!;
+        [Dependency] private readonly GhostVisibilitySystem _ghostVisibility = default!;
 
         private EntityQuery<GhostComponent> _ghostQuery;
         private EntityQuery<PhysicsComponent> _physicsQuery;
@@ -179,7 +181,7 @@ namespace Content.Server.Ghost
             // Allow this entity to be seen by other ghosts.
             var visibility = EnsureComp<VisibilityComponent>(uid);
 
-            if (_gameTicker.RunLevel != GameRunLevel.PostRound)
+            if (_gameTicker.RunLevel != GameRunLevel.PostRound && !_ghostVisibility.IsVisible(component))
             {
                 _visibilitySystem.AddLayer((uid, visibility), (int) VisibilityFlags.Ghost, false);
                 _visibilitySystem.RemoveLayer((uid, visibility), (int) VisibilityFlags.Normal, false);

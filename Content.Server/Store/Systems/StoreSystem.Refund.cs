@@ -23,7 +23,13 @@ public sealed partial class StoreSystem
 
     private void OnEntityRemoved(Entity<StoreRefundComponent> ent, ref EntRemovedFromContainerMessage args)
     {
-        CheckDisableRefund(ent);
+        if (component.StoreEntity == null || _actions.TryGetActionData(uid, out _) || !TryComp<StoreComponent>(component.StoreEntity.Value, out var storeComp))
+            return;
+
+        // Goob edit start
+        DisableListingRefund(component.Data);
+        // DisableRefund(component.StoreEntity.Value, storeComp);
+        // Goob edit end
     }
 
     private void OnEntityInserted(Entity<StoreRefundComponent> ent, ref EntInsertedIntoContainerMessage args)
@@ -46,7 +52,10 @@ public sealed partial class StoreSystem
         if (args.Cancelled)
             return;
 
-        CheckDisableRefund(ent);
+        // Goob edit start
+        DisableListingRefund(component.Data);
+        // DisableRefund(component.StoreEntity.Value, storeComp);
+        // Goob edit end
     }
 
     private void OnStoreTerminating(Entity<StoreComponent> ent, ref EntityTerminatingEvent args)
