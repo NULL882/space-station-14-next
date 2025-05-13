@@ -4,11 +4,10 @@ using Content.Shared._Goobstation.Wizard;
 using Content.Shared._Goobstation.Wizard.BindSoul;
 using Content.Shared._Goobstation.Wizard.Chuuni;
 using Content.Shared._Goobstation.Wizard.FadingTimedDespawn;
-using Content.Shared._Shitmed.Targeting;
+using Content.Shared._CorvaxNext.Targeting;
 using Content.Shared.Actions;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
-using Content.Shared.Changeling;
 using Content.Shared.Coordinates.Helpers;
 using Content.Shared.Damage;
 using Content.Shared.Doors.Components;
@@ -581,7 +580,6 @@ public abstract class SharedMagicSystem : EntitySystem
 
         List<(Type, string)> blockers = new()
         {
-            (typeof(ChangelingComponent), "changeling"),
             // You should be able to mindswap with heretics,
             // but all of their data and abilities are not tied to their mind, I'm not making this work.
             (typeof(HereticComponent), "heretic"),

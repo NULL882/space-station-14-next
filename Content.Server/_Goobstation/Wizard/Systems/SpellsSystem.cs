@@ -27,7 +27,7 @@ using Content.Shared._Goobstation.Wizard.BindSoul;
 using Content.Shared._Goobstation.Wizard.Chuuni;
 using Content.Shared._Goobstation.Wizard.FadingTimedDespawn;
 using Content.Shared._Goobstation.Wizard.SpellCards;
-using Content.Shared._Shitmed.Targeting;
+using Content.Shared._CorvaxNext.Targeting;
 using Content.Shared.Actions;
 using Content.Shared.Chat;
 using Content.Shared.Chemistry.Components;

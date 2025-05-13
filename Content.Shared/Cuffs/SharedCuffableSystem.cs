@@ -6,7 +6,6 @@ using Content.Shared.Alert;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.Database;
-using Content.Shared._EinsteinEngines.Flight;
 using Content.Shared._Goobstation.Wizard.Mutate; // Goobstation
 using Content.Shared.DoAfter;
 using Content.Shared.Hands;

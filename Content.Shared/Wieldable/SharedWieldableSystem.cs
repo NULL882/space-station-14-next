@@ -117,7 +117,7 @@ public abstract class SharedWieldableSystem : EntitySystem
 
     private void OnItemInHand(EntityUid uid, GunWieldBonusComponent component, GotEquippedHandEvent args)  // GoobStation change - OnItemInHand for NoWieldNeeded
     {
-        _gun.RefreshModifiers(uid, args.User);
+        _gun.RefreshModifiers(uid);
     }
 
     private void OnGunUnwielded(EntityUid uid, GunWieldBonusComponent component, ItemUnwieldedEvent args)
@@ -141,10 +141,8 @@ public abstract class SharedWieldableSystem : EntitySystem
     private void OnGunRefreshModifiers(Entity<GunWieldBonusComponent> bonus, ref GunRefreshModifiersEvent args)
     {
         if (TryComp(bonus, out WieldableComponent? wield) &&
-            (wield.Wielded && !HasComp<WeaponsUseInabilityComponent>(wield.User)) || //Corvax-Next-Resomi
-            (args.User != null && TryComp<NoWieldNeededComponent>(args.User.Value, out var noWieldNeeded) &&  // GoobStation change - Check for NoWieldNeeded and GetBonus
-            noWieldNeeded.GetBonus)
-            )
+            ((wield.Wielded && wield.User != null && !HasComp<WeaponsUseInabilityComponent>(wield.User)) || //Corvax-Next-Resomi
+            wield.User != null))
         {
             args.MinAngle += bonus.Comp.MinAngle;
             args.MaxAngle += bonus.Comp.MaxAngle;
@@ -234,14 +232,14 @@ public abstract class SharedWieldableSystem : EntitySystem
         }
 
         // Is it.. actually in one of their hands?
-        if (checkHolding && !_handsSystem.IsHolding(user, uid, out _, hands))
+        if (checkHolding && !_hands.IsHolding(user, uid, out _, hands))
         {
             if (!quiet)
                 _popup.PopupClient(Loc.GetString("wieldable-component-not-in-hands", ("item", uid)), user, user);
             return false;
         }
 
-        if (_handsSystem.CountFreeableHands((user, hands), true) < component.FreeHandsRequired) // Goob edit
+        if (_hands.CountFreeableHands((user, hands), true) < component.FreeHandsRequired) // Goob edit
         {
             if (!quiet)
             {
@@ -314,7 +312,7 @@ public abstract class SharedWieldableSystem : EntitySystem
         var selfMessage = Loc.GetString("wieldable-component-successful-wield", ("item", used));
         var othersMessage = Loc.GetString("wieldable-component-successful-wield-other", ("user", Identity.Entity(user, EntityManager)), ("item", used));
         if (showMessage) // Goob edit
-            _popupSystem.PopupPredicted(selfMessage, othersMessage, user, user);
+            _popup.PopupPredicted(selfMessage, othersMessage, user, user);
 
         component.User = user; //Corvax-Next-Resomi
 

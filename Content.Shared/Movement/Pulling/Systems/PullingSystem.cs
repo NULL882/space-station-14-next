@@ -1,6 +1,6 @@
-using Content.Shared.Contests; // Goobstation - Grab Intent
+// using Content.Shared.Contests; // Goobstation - Grab Intent
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics; // Goobstation - Grab Intent
+// using System.Numerics; // Goobstation - Grab Intent
 using Content.Shared._White.Grab; // Goobstation
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
@@ -81,7 +81,7 @@ public sealed class PullingSystem : EntitySystem
     [Dependency] private readonly GrabThrownSystem _grabThrown = default!;
     [Dependency] private readonly SharedCombatModeSystem _combatMode = default!;
     [Dependency] private readonly ThrowingSystem _throwing = default!;
-    [Dependency] private readonly ContestsSystem _contests = default!; // Goobstation - Grab Intent
+    // [Dependency] private readonly ContestsSystem _contests = default!; // Goobstation - Grab Intent
 
     public override void Initialize()
     {
@@ -97,8 +97,8 @@ public sealed class PullingSystem : EntitySystem
         SubscribeLocalEvent<PullableComponent, EntGotInsertedIntoContainerMessage>(OnPullableContainerInsert);
         SubscribeLocalEvent<PullableComponent, ModifyUncuffDurationEvent>(OnModifyUncuffDuration);
         SubscribeLocalEvent<PullableComponent, StopBeingPulledAlertEvent>(OnStopBeingPulledAlert);
-        SubscribeLocalEvent<PullableComponent, UpdateCanMoveEvent>(OnGrabbedMoveAttempt); // Goobstation
-        SubscribeLocalEvent<PullableComponent, SpeakAttemptEvent>(OnGrabbedSpeakAttempt); // Goobstation
+        // SubscribeLocalEvent<PullableComponent, UpdateCanMoveEvent>(OnGrabbedMoveAttempt); // Goobstation
+        // SubscribeLocalEvent<PullableComponent, SpeakAttemptEvent>(OnGrabbedSpeakAttempt); // Goobstation
 
         SubscribeLocalEvent<PullerComponent, AfterAutoHandleStateEvent>(OnAfterState);
         SubscribeLocalEvent<PullerComponent, EntGotInsertedIntoContainerMessage>(OnPullerContainerInsert);
@@ -107,8 +107,8 @@ public sealed class PullingSystem : EntitySystem
         SubscribeLocalEvent<PullerComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
         SubscribeLocalEvent<PullerComponent, DropHandItemsEvent>(OnDropHandItems);
         SubscribeLocalEvent<PullerComponent, StopPullingAlertEvent>(OnStopPullingAlert);
-        SubscribeLocalEvent<PullerComponent, VirtualItemThrownEvent>(OnVirtualItemThrown); // Goobstation - Grab Intent
-        SubscribeLocalEvent<PullerComponent, AddCuffDoAfterEvent>(OnAddCuffDoAfterEvent); // Goobstation - Grab Intent
+        // SubscribeLocalEvent<PullerComponent, VirtualItemThrownEvent>(OnVirtualItemThrown); // Goobstation - Grab Intent
+        // SubscribeLocalEvent<PullerComponent, AddCuffDoAfterEvent>(OnAddCuffDoAfterEvent); // Goobstation - Grab Intent
 
         SubscribeLocalEvent<PullableComponent, StrappedEvent>(OnBuckled);
         SubscribeLocalEvent<PullableComponent, BuckledEvent>(OnGotBuckled);
@@ -560,32 +560,35 @@ public sealed class PullingSystem : EntitySystem
         return !startPull.Cancelled && !getPulled.Cancelled;
     }
 
-    // Goobstation - Grab Intent
-    public bool TogglePull(Entity<PullableComponent?> pullable, EntityUid pullerUid)
+    // // Goobstation - Grab Intent
+    // public bool TogglePull(Entity<PullableComponent?> pullable, EntityUid pullerUid)
+    // {
+    //     if (!Resolve(pullable, ref pullable.Comp, false))
+    //         return false;
+
+    //     if (pullable.Comp.Puller != pullerUid)
+    //         return TryStartPull(pullerUid, pullable, pullableComp: pullable.Comp);
+
+    //     if (TryGrab((pullable, pullable.Comp), pullerUid))
+    //         return true;
+
+    //     if (!_combatMode.IsInCombatMode(pullable))
+    //         return TryStopPull(pullable, pullable.Comp, ignoreGrab: true);
+
+    //     return false;
+    // }
+    // // Goobstation
+
+
+    public bool TogglePull(EntityUid pullerUid, PullerComponent pullerComp)
     {
-        if (!Resolve(pullable, ref pullable.Comp, false))
+        if (pullerComp.Pulling == null || !TryComp<PullableComponent>(pullerComp.Pulling, out var pullable))
             return false;
 
-        if (pullable.Comp.Puller != pullerUid)
-            return TryStartPull(pullerUid, pullable, pullableComp: pullable.Comp);
+        if (pullable.Puller == pullerUid)
+            return TryStopPull(pullerComp.Pulling.Value, pullable, pullerUid);
 
-        if (TryGrab((pullable, pullable.Comp), pullerUid))
-            return true;
-
-        if (!_combatMode.IsInCombatMode(pullable))
-            return TryStopPull(pullable, pullable.Comp, ignoreGrab: true);
-
-        return false;
-    }
-    // Goobstation
-
-
-    public bool TogglePull(EntityUid pullerUid, PullerComponent puller)
-    {
-        if (!TryComp<PullableComponent>(puller.Pulling, out var pullable))
-            return false;
-
-        return TogglePull((puller.Pulling.Value, pullable), pullerUid);
+        return TryStartPull(pullerUid, pullerComp.Pulling.Value, pullerComp, pullable);
     }
 
     public bool TryStartPull(EntityUid pullerUid, EntityUid pullableUid,
@@ -717,8 +720,8 @@ public sealed class PullingSystem : EntitySystem
         _adminLogger.Add(LogType.Action, LogImpact.Low,
             $"{ToPrettyString(pullerUid):user} started pulling {ToPrettyString(pullableUid):target}");
 
-        if (_combatMode.IsInCombatMode(pullerUid)) // Goobstation
-            TryGrab(pullableUid, pullerUid); // Goobstation
+        // if (_combatMode.IsInCombatMode(pullerUid)) // Goobstation
+        //     TryGrab(pullableUid, pullerUid); // Goobstation
 
         return true;
     }
@@ -740,33 +743,33 @@ public sealed class PullingSystem : EntitySystem
             return false;
 
 
-        // Goobstation - Grab Intent
-        if (!ignoreGrab)
-        {
-            if (_netManager.IsServer && user != null && user.Value == pullableUid)
-            {
-                var releaseAttempt = AttemptGrabRelease(pullableUid);
-                if (!releaseAttempt)
-                {
-                    _popup.PopupEntity(Loc.GetString("popup-grab-release-fail-self"),
-                        pullableUid,
-                        pullableUid,
-                        PopupType.SmallCaution);
-                    return false;
-                }
+        // // Goobstation - Grab Intent
+        // if (!ignoreGrab)
+        // {
+        //     if (_netManager.IsServer && user != null && user.Value == pullableUid)
+        //     {
+        //         var releaseAttempt = AttemptGrabRelease(pullableUid);
+        //         if (!releaseAttempt)
+        //         {
+        //             _popup.PopupEntity(Loc.GetString("popup-grab-release-fail-self"),
+        //                 pullableUid,
+        //                 pullableUid,
+        //                 PopupType.SmallCaution);
+        //             return false;
+        //         }
 
-                _popup.PopupEntity(Loc.GetString("popup-grab-release-success-self"),
-                    pullableUid,
-                    pullableUid,
-                    PopupType.SmallCaution);
-                _popup.PopupEntity(
-                    Loc.GetString("popup-grab-release-success-puller",
-                        ("target", Identity.Entity(pullableUid, EntityManager))),
-                    pullerUidNull.Value,
-                    pullerUidNull.Value,
-                    PopupType.MediumCaution);
-            }
-        }
+        //         _popup.PopupEntity(Loc.GetString("popup-grab-release-success-self"),
+        //             pullableUid,
+        //             pullableUid,
+        //             PopupType.SmallCaution);
+        //         _popup.PopupEntity(
+        //             Loc.GetString("popup-grab-release-success-puller",
+        //                 ("target", Identity.Entity(pullableUid, EntityManager))),
+        //             pullerUidNull.Value,
+        //             pullerUidNull.Value,
+        //             PopupType.MediumCaution);
+        //     }
+        // }
         // Goobstation
         StopPulling(pullableUid, pullable);
         return true;

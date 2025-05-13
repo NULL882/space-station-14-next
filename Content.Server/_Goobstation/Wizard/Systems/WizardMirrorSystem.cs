@@ -2,7 +2,7 @@ using Content.Server.Humanoid;
 using Content.Server.Polymorph.Components;
 using Content.Server.Polymorph.Systems;
 using Content.Shared._Goobstation.Wizard.MagicMirror;
-using Content.Shared._Shitmed.Humanoid.Events;
+using Content.Shared.Humanoid.Events;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.IdentityManagement;

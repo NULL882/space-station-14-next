@@ -26,15 +26,8 @@ using Robust.Shared.Map;
 using Robust.Shared.Utility;
 
 // Shitmed Change
-using Content.Shared._CorvaxNext.Body.Events;
-using Content.Shared._CorvaxNext.Body.Part;
-using Content.Shared._CorvaxNext.Humanoid.Events;
-using Content.Shared.Silicons.Borgs.Components;
-using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Humanoid;
-using Content.Shared.Inventory.Events;
+using Content.Shared._CorvaxNext.Surgery.Body.Events;
 using Content.Shared.Pulling.Events;
-using Content.Shared.Standing;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
 
@@ -442,6 +435,8 @@ public partial class SharedBodySystem
     public virtual bool BurnPart(EntityUid partId,
         BodyPartComponent? part = null)
     {
+        var gibs = new HashSet<EntityUid>();
+        
         if (!Resolve(partId, ref part, logMissing: false))
             return false;
 

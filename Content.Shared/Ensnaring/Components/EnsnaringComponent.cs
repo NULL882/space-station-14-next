@@ -9,6 +9,12 @@ namespace Content.Shared.Ensnaring.Components;
 public sealed partial class EnsnaringComponent : Component
 {
     /// <summary>
+    /// Goobstation
+    /// </summary>
+    [DataField]
+    public bool DestroyOnRemove = false;
+
+    /// <summary>
     /// How long it should take to free someone else.
     /// </summary>
     [DataField]

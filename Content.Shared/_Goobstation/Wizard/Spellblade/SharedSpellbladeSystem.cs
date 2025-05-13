@@ -75,7 +75,6 @@ public abstract class SharedSpellbladeSystem : EntitySystem
             return;
 
         weapon.AttackRate *= args.MeleeMultiplier;
-        weapon.HeavyStaminaCost /= args.MeleeMultiplier;
         weapon.Damage /= args.MeleeMultiplier;
         Dirty(ent.Owner, weapon);
     }

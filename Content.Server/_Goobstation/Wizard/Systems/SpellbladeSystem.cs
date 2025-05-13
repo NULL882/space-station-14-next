@@ -3,7 +3,7 @@ using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Lightning;
 using Content.Shared._Goobstation.Wizard.Spellblade;
-using Content.Shared._Shitmed.Targeting;
+using Content.Shared._CorvaxNext.Targeting;
 using Content.Shared.Damage;
 using Content.Shared.Electrocution;
 using Content.Shared.Mobs.Components;

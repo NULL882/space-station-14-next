@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
-using Content.Shared._DV.Carrying;
-using Content.Shared._EinsteinEngines.Silicon.Components;
 using Content.Shared._Goobstation.Wizard.BindSoul;
 using Content.Shared._Goobstation.Wizard.Chuuni;
 using Content.Shared._Goobstation.Wizard.Components;
@@ -14,7 +12,7 @@ using Content.Shared._Goobstation.Wizard.SpellCards;
 using Content.Shared._Goobstation.Wizard.Teleport;
 using Content.Shared._Goobstation.Wizard.TeslaBlast;
 using Content.Shared._Goobstation.Wizard.Traps;
-using Content.Shared._Shitmed.Targeting;
+using Content.Shared._CorvaxNext.Targeting;
 using Content.Shared.Access.Components;
 using Content.Shared.Actions;
 using Content.Shared.Body.Components;
@@ -388,7 +386,7 @@ public abstract class SharedSpellsSystem : EntitySystem
             if (!statusQuery.TryComp(target, out var status))
                 continue;
 
-            if (HasComp<SiliconComponent>(target) || HasComp<BorgChassisComponent>(target))
+            if (HasComp<BorgChassisComponent>(target))
                 Stun.TryParalyze(target, ev.SiliconStunTime / range, true, status);
             else
                 Stun.KnockdownOrStun(target, ev.KnockdownTime / range, true, status);
@@ -485,7 +483,7 @@ public abstract class SharedSpellsSystem : EntitySystem
         if (!_magic.PassesSpellPrerequisites(ev.Action, ev.Performer))
             return;
 
-        if (HasComp<SiliconComponent>(ev.Performer) || HasComp<BorgChassisComponent>(ev.Performer))
+        if (HasComp<BorgChassisComponent>(ev.Performer))
         {
             Popup(ev.Performer, "spell-fail-bind-soul-silicon");
             return;
@@ -528,7 +526,7 @@ public abstract class SharedSpellsSystem : EntitySystem
         if (ev.Handled || !_magic.PassesSpellPrerequisites(ev.Action, ev.Performer))
             return;
 
-        if (HasComp<SiliconComponent>(ev.Performer) || HasComp<BorgChassisComponent>(ev.Performer))
+        if (HasComp<BorgChassisComponent>(ev.Performer))
         {
             Popup(ev.Performer, "spell-fail-mutate-silicon");
             return;
@@ -711,7 +709,7 @@ public abstract class SharedSpellsSystem : EntitySystem
         if (ev.Handled || !_magic.PassesSpellPrerequisites(ev.Action, ev.Performer))
             return;
 
-        if (HasComp<BorgChassisComponent>(ev.Target) || HasComp<SiliconComponent>(ev.Target))
+        if (HasComp<BorgChassisComponent>(ev.Target))
         {
             Popup(ev.Performer, "spell-fail-target-silicon");
             return;
@@ -1111,9 +1109,6 @@ public abstract class SharedSpellsSystem : EntitySystem
 
         if (TryComp<PullerComponent>(ev.Performer, out var puller) && HasComp<PullableComponent>(puller.Pulling) &&
             RechargePerson(puller.Pulling.Value))
-            return;
-
-        if (TryComp(ev.Performer, out CarryingComponent? carrying) && RechargePerson(carrying.Carried))
             return;
 
         if (!TryComp(ev.Performer, out HandsComponent? hands))
