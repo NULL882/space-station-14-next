@@ -27,6 +27,14 @@ public sealed partial class ReflectComponent : Component
 
     [DataField("soundOnReflect")]
     public SoundSpecifier? SoundOnReflect = new SoundPathSpecifier("/Audio/Weapons/Guns/Hits/laser_sear_wall.ogg");
+
+    /// <summary>
+    /// Goobstation
+    /// If not null determines probability for a projectile to be reflected
+    /// for other type of projectile (energy / non energy).
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
+    public float OtherTypeReflectProb;
 }
 
 [Flags]
@@ -35,4 +43,5 @@ public enum ReflectType : byte
     None = 0,
     NonEnergy = 1 << 0,
     Energy = 1 << 1,
+    Magic = 1 << 2,
 }

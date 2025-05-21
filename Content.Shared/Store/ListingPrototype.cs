@@ -273,7 +273,6 @@ public partial class ListingData : IEquatable<ListingData>
             Name = Name,
             Description = Description,
             Categories = Categories,
-            Cost = Cost,
             Conditions = Conditions,
             Icon = Icon,
             Priority = Priority,
@@ -288,13 +287,6 @@ public partial class ListingData : IEquatable<ListingData>
             BlockRefundListings = BlockRefundListings, // goob edit
             PurchaseAmount = PurchaseAmount,
             RestockTime = RestockTime,
-            // WD START
-            SaleLimit = SaleLimit,
-            SaleBlacklist = SaleBlacklist,
-            DiscountValue = DiscountValue,
-            OldCost = OldCost,
-            Components = Components,
-            // WD END
         };
     }
 }

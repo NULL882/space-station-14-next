@@ -93,7 +93,6 @@ public abstract partial class SharedGunSystem : EntitySystem
         InitializeSolution();
         // Goobstation
         InitializeBasicHitScan();
-        InitializeChangeling();
 
         // Interactions
         SubscribeLocalEvent<GunComponent, GetVerbsEvent<AlternativeVerb>>(OnAltVerb);
