@@ -228,6 +228,8 @@
         blacklist:  # Goobstation
           tags:
           - WizardWand
+          components:
+          - BatteryRecharge
 
 - type: entity
   parent: BaseRecharger

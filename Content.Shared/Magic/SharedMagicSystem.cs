@@ -87,6 +87,8 @@ public abstract class SharedMagicSystem : EntitySystem
     [Dependency] private readonly DamageableSystem _damageable = default!; // Goobstation
     [Dependency] private readonly NpcFactionSystem _faction = default!; // Goobstation
 
+    private static readonly ProtoId<TagPrototype> InvalidForGlobalSpawnSpellTag = "InvalidForGlobalSpawnSpell";
+
     public override void Initialize()
     {
         base.Initialize();
@@ -550,7 +552,7 @@ public abstract class SharedMagicSystem : EntitySystem
 
             var ent = human.Comp.OwnedEntity.Value;
 
-            if (_tag.HasTag(ent, "InvalidForGlobalSpawnSpell"))
+            if (_tag.HasTag(ent, InvalidForGlobalSpawnSpellTag))
                 continue;
 
             var mapCoords = _transform.GetMapCoordinates(ent);

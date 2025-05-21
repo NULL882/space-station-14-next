@@ -22,7 +22,6 @@
   - Revolutionary
   - Dragon
   - AllHostile
-  - Wizard
   - Heretic # goob edit - heretics
   - Blob # Goobstation - Blob
   - Wizard # goob edit - wizard
@@ -47,6 +46,7 @@
   - AllHostile
   - Blob # Goobstation - Blob
   - Wizard
+  - Dragon
 
 - type: npcFaction
   id: SimpleHostile
@@ -58,9 +58,9 @@
   - Zombie
   - Revolutionary
   - AllHostile
-  - Wizard
   - Heretic # goob edit - heretics
   - Blob # Goobstation - Blob
+  - Dragon
   friendly: # Goobstation
     - Wizard
 
@@ -77,7 +77,6 @@
   - Zombie
   - Dragon
   - AllHostile
-  - Wizard
   - Heretic # goob edit - heretics
   - Blob # Goobstation - Blob
   - Wizard # goob edit - wizard
@@ -92,9 +91,9 @@
   - Zombie
   - Revolutionary
   - AllHostile
-  - Wizard
   - Heretic # goob edit - heretics
   - Blob # Goobstation - Blob
+  - Dragon
   friendly: # Goobstation
     - Wizard
 
@@ -109,7 +108,7 @@
   - PetsNT
   - Revolutionary
   - AllHostile
-  - Wizard
+  - Dragon
   - Heretic # goob edit - heretics
   - Blob # Goobstation - Blob
   - Wizard # goob edit - wizard
@@ -158,4 +157,3 @@
   - Revolutionary
   - AllHostile
   - Blob # Goobstation - Blob
-  - Wizard # Goobstation - wizard

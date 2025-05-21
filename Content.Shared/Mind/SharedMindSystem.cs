@@ -19,7 +19,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.Mind;
 
-public abstract class SharedMindSystem : EntitySystem
+public abstract partial class SharedMindSystem : EntitySystem
 {
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly INetManager _net = default!;
@@ -41,7 +41,9 @@ public abstract class SharedMindSystem : EntitySystem
         SubscribeLocalEvent<VisitingMindComponent, EntityTerminatingEvent>(OnVisitingTerminating);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnReset);
         SubscribeLocalEvent<MindComponent, ComponentStartup>(OnMindStartup);
-        SubscribeLocalEvent<MindContainerComponent, EntityRenamedEvent>(OnRenamed); // Goob edit
+        SubscribeLocalEvent<MindComponent, EntityRenamedEvent>(OnRenamed);
+
+        InitializeRelay();
     }
 
     public override void Shutdown()
@@ -184,13 +186,9 @@ public abstract class SharedMindSystem : EntitySystem
             args.Handled = true;
     }
 
-    private void OnRenamed(Entity<MindContainerComponent> ent, ref EntityRenamedEvent args) // Goob edit start
+    private void OnRenamed(Entity<MindComponent> ent, ref EntityRenamedEvent args)
     {
-        if (!TryComp(ent.Comp.Mind, out MindComponent? mind))
-            return;
-
-        mind.CharacterName = args.NewName;
-        // Goob edit end
+        ent.Comp.CharacterName = args.NewName;
         Dirty(ent);
     }
 
@@ -373,7 +371,7 @@ public abstract class SharedMindSystem : EntitySystem
 
         // garbage collection - only delete the objective entity if no mind uses it anymore
         // This comes up for stuff like paradox clones where the objectives share the same entity
-        var mindQuery = new AllEntityQueryEnumerator<MindComponent>();
+        var mindQuery = AllEntityQuery<MindComponent>();
         while (mindQuery.MoveNext(out _, out var queryComp))
         {
             if (queryComp.Objectives.Contains(objective))

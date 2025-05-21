@@ -63,11 +63,11 @@ public sealed partial class AntagSelectionComponent : Component
     public LocId? AgentName;
 
     /// <summary>
-    /// Goobstation.
-    /// Whether the round end text should show original entity name or mind character name.
+    /// If the player is pre-selected but fails to spawn in (e.g. due to only having antag-immune jobs selected),
+    /// should they be removed from the pre-selection list?
     /// </summary>
     [DataField]
-    public bool UseCharacterNames;
+    public bool RemoveUponFailedSpawn = true;
 }
 
 [DataDefinition]
@@ -201,24 +201,6 @@ public partial struct AntagSelectionDefinition()
     /// </remarks>
     [DataField]
     public EntProtoId? SpawnerPrototype;
-
-    // goob edit - actual pacifism implant
-    [DataField]
-    public List<JobSpecial> Special = new();
-
-    /// <summary>
-    /// Goobstation
-    /// Does this antag role roll before job
-    /// </summary>
-    [DataField]
-    public bool RollBeforeJob = true;
-
-    /// <summary>
-    /// Goobstation
-    /// Unequip all gear before making antag
-    /// </summary>
-    [DataField]
-    public bool UnequipOldGear;
 }
 
 /// <summary>
